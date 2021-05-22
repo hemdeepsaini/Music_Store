@@ -73,7 +73,7 @@ var SongsListPage = {
   },
 
   playSong: function () {
-    $(".song-source", this.$container).on("click", function (e) {
+    $(".song-source").on("click", function (e) {
       e.preventDefault();
 
       var self = $(this);
