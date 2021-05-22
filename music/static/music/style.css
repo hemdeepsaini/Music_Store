@@ -1,0 +1,43 @@
+body {
+  background: white url("images/background.png");
+
+  /* Center and scale the image nicely */
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: cover;
+}
+
+ul.errorlist {
+  padding-left: 0;
+}
+
+ul.errorlist > li {
+  list-style: none;
+}
+
+.navbar {
+  border-radius: 0;
+}
+
+.navbar-brand {
+  font-family: "Satisfy", cursive;
+}
+
+.glyphicon-star {
+  color: #cccccc;
+  font-size: 16px;
+}
+
+.glyphicon-star.active {
+  color: #fdb230;
+}
+
+#aud {
+  width: 80%;
+  box-shadow: 5px 5px 20px rgba(0, 0, 0, 0.4);
+  border-radius: 90px;
+  position: fixed;
+  left: 50%;
+  top: 99%;
+  transform: translate(-50%, -100%);
+}
