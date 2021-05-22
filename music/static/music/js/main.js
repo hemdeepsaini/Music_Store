@@ -22,6 +22,27 @@ var AlbumsListPage = {
       return false;
     });
   },
+
+  // playSong: function () {
+  //   $(".song-source", this.$container).on("click", function (e) {
+  //     e.preventDefault();
+
+  //     var self = $(this);
+  //     var url = self.attr("href");
+  //     console.log(url);
+  //     $("#audss").attr("src", url);
+
+  //     var audio = $("#aud");
+
+  //     audio[0].pause();
+  //     audio[0].load(); //suspends and restores all audio element
+
+  //     // if (isAutoplay)
+  //     audio[0].play();
+
+  //     return false;
+  //   });
+  // },
 };
 
 var SongsListPage = {
@@ -29,6 +50,7 @@ var SongsListPage = {
     this.$container = $(".songs-container");
     this.render();
     this.bindEvents();
+    this.playSong();
   },
 
   render: function () {},
@@ -49,25 +71,15 @@ var SongsListPage = {
       return false;
     });
   },
-};
 
-var Player = {
-  init: function () {
-    this.$container = $("#aud");
-    this.render();
-    this.bindEvents();
-  },
-
-  render: function () {},
-
-  bindEvents: function () {
-    $(".xxx").on("click", function (e) {
+  playSong: function () {
+    $(".song-source", this.$container).on("click", function (e) {
       e.preventDefault();
 
       var self = $(this);
-      var src = $(".xxx").attr("src");
-      console.log(src);
-      $("#audss").attr("src", src);
+      var url = self.attr("href");
+      console.log(url);
+      $("#audss").attr("src", url);
 
       var audio = $("#aud");
 
@@ -76,6 +88,8 @@ var Player = {
 
       // if (isAutoplay)
       audio[0].play();
+
+      return false;
     });
   },
 };
@@ -83,10 +97,4 @@ var Player = {
 $(document).ready(function () {
   AlbumsListPage.init();
   SongsListPage.init();
-  Player.init();
 });
-
-// function Play(srcc) {
-//   //   document.getElementById("audss").src = srcc;
-//   console.log(srcc);
-// }

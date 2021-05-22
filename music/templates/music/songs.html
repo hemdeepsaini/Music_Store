@@ -36,7 +36,7 @@
                                     <td>{{ song.song_title }}</td>
                                     <td>{{ song.album.artist }}</td>
                                     <td>
-                                        <a target="_blank" src="{{ song.audio_file.url }}"  class="xxx">
+                                        <a target="_parent" href="{{ song.audio_file.url }}"  class="song-source">
                                             <button type="button" class="btn btn-success btn-xs">
                                                 <span class="glyphicon glyphicon-play"></span>&nbsp; Play
                                             </button>
