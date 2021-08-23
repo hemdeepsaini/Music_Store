@@ -24,7 +24,7 @@ SECRET_KEY = os.environ['SECRET_KEY']
 # SECRET_KEY = '76ik899l@hm+dgt+kg^j+63^_%&-aps38&$rgil)#j$0n(ez4'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = False
 
 ALLOWED_HOSTS = ["my-musicstore.herokuapp.com","localhost"]
 
