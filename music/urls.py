@@ -1,4 +1,5 @@
 from django.urls import path
+# from django.conf.urls import url
 from . import views
 
 app_name = 'music'
@@ -6,6 +7,8 @@ app_name = 'music'
 urlpatterns = [
     path('', views.index, name='index'),
     path('register/', views.register, name='register'),
+    # url(r'^activate/(?P<uidb64>[0-9A-Za-z_\-]+)/(?P<token>[0-9A-Za-z]{1,13}-[0-9A-Za-z]{1,20})/$',views.activate_account, name='activate'),
+    path('activate/<uidb64>/<token>/',views.activate_account, name='activate'),
     path('login_user/', views.login_user, name='login_user'),
     path('logout_user/', views.logout_user, name='logout_user'),
     path('<int:album_id>/', views.detail, name='detail'),

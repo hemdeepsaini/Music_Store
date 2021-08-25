@@ -1,10 +1,20 @@
 from django.contrib.auth import authenticate, login
 from django.contrib.auth import logout
-from django.http import JsonResponse
+from django.http import JsonResponse,HttpResponse
 from django.shortcuts import render, get_object_or_404
 from django.db.models import Q
 from .forms import AlbumForm, SongForm, UserForm
 from .models import Album, Song
+
+
+from django.contrib.sites.shortcuts import get_current_site
+from django.utils.encoding import force_bytes, force_text
+from django.utils.http import urlsafe_base64_encode, urlsafe_base64_decode
+from django.urls import reverse
+from .token_generator import account_activation_token
+from django.core.mail import EmailMessage
+from django.contrib.auth.models import User
+
 
 AUDIO_FILE_TYPES = ['wav', 'mp3', 'ogg']
 IMAGE_FILE_TYPES = ['png', 'jpg', 'jpeg']
@@ -183,17 +193,53 @@ def register(request):
         username = form.cleaned_data['username']
         password = form.cleaned_data['password']
         user.set_password(password)
+        user.is_active=False
         user.save()
-        user = authenticate(username=username, password=password)
-        if user is not None:
-            if user.is_active:
-                login(request, user)
-                albums = Album.objects.filter(user=request.user)
-                return render(request, 'music/index.html', {'albums': albums})
+        current_site = get_current_site(request)
+        email_body = {
+            'user': user,
+            'domain': current_site.domain,
+            'uid': urlsafe_base64_encode(force_bytes(user.pk)),
+            'token': account_activation_token.make_token(user),
+        }
+
+        link = reverse('music:activate', kwargs={
+                        'uidb64': email_body['uid'], 'token': email_body['token']})
+
+        email_subject = 'Activate your account'
+
+        activate_url = 'http://'+current_site.domain +link
+
+        to_email = form.cleaned_data.get('email')
+
+        email = EmailMessage(
+            email_subject,
+            'Hi '+user.username + ', Please the link below to activate your account \n'+activate_url,
+            to=[to_email]
+        )
+        email.send(fail_silently=True)
+        return render(request, 'music/redirect.html', {'user': username} )
     context = {
         "form": form,
     }
     return render(request, 'music/register.html', context)
+
+
+def activate_account(request, uidb64, token):
+    try:
+        uid = force_bytes(urlsafe_base64_decode(uidb64))
+        user = User.objects.get(pk=uid)
+    except(TypeError, ValueError, OverflowError, User.DoesNotExist):
+        user = None
+    if user is not None and account_activation_token.check_token(user, token):
+        user.is_active = True
+        user.save()
+        login(request, user)
+        albums = Album.objects.filter(user=request.user)
+        return render(request, 'music/index.html', {'albums': albums})
+    else:
+        return HttpResponse('Activation link is invalid!This problem might be arised due slow internet connetion or link has been broken.Please check whether you can login with the account just created.If not please register again.')
+
 
 
 def songs(request, filter_by):
